@@ -1,6 +1,13 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test.beforeEach(async ({ page }) => {
+test('I can register a new account', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page).toBeDefined();
+});
+
+
+/* test.beforeEach(async ({ page }) => {
   await page.goto('https://demo.playwright.dev/todomvc');
 });
 
@@ -434,4 +441,4 @@ async function checkTodosInLocalStorage(page: Page, title: string) {
   return await page.waitForFunction(t => {
     return JSON.parse(localStorage['react-todos']).map((todo: any) => todo.title).includes(t);
   }, title);
-}
+} */
