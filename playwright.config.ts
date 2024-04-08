@@ -75,7 +75,10 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run build && npm run start",
+    command: "npm run seed:e2e && npm run build && npm run start",
+    env: {
+      NODE_ENV: 'test'
+    },
     url: baseURL,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
