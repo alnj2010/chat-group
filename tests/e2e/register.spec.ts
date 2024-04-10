@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("I can register a new account", async ({ page }) => {
+test("I can register a new account", async ({ page, browserName }) => {
   await page.goto("/");
   const registerLink = page.getByTestId("register-link");
   await registerLink.click();
@@ -9,8 +9,10 @@ test("I can register a new account", async ({ page }) => {
   const userPasswordTextField = page.getByTestId(
     "user-password-register-textfield"
   );
-
-  await userEmailTextField.fill(`userDummy${Date.now()}@email.com`);
+  const id = Math.random().toString().substring(2, 5);
+  await userEmailTextField.fill(
+    `userDummy${browserName}${id}${Date.now()}@email.com`
+  );
   await userPasswordTextField.fill("passwordDummy");
 
   const registerButton = page.getByTestId("register-button");
