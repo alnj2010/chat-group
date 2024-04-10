@@ -15,7 +15,6 @@ jobs:
 
   Check_E2E_Test:
     runs-on: ubuntu-latest
-    container: node:18.17
     services:
         postgres:
           image: postgres
@@ -44,6 +43,6 @@ jobs:
         env:
             POSTGRES_PASSWORD: "mypassword"
             POSTGRES_HOST: "localhost"
-            POSTGRES_PORT: 5433
+            POSTGRES_PORT: 5432
             POSTGRES_DATABASE: "chat_group_e2e_tests"
             POSTGRES_USER: "admin"

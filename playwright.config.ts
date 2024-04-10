@@ -80,7 +80,7 @@ export default defineConfig({
       NODE_ENV: "test",
       POSTGRES_PASSWORD: "mypassword",
       POSTGRES_HOST: "localhost",
-      POSTGRES_PORT: "5433",
+      POSTGRES_PORT: "5432",
       POSTGRES_DATABASE: "chat_group_e2e_tests",
       POSTGRES_USER: "admin",
     },
