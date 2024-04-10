@@ -15,6 +15,7 @@ jobs:
 
   Check_E2E_Test:
     runs-on: ubuntu-latest
+    container: node:18.17
     services:
         postgres:
           image: postgres

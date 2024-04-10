@@ -3,10 +3,6 @@ import * as core from "@actions/core";
 
 function log(msg: string) {
   core.debug(msg);
-  core.info(msg);
-  console.log(msg);
-  console.debug(msg);
-  console.info(msg);
 }
 
 async function main() {
