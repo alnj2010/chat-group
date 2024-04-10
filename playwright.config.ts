@@ -77,7 +77,12 @@ export default defineConfig({
   webServer: {
     command: "npm run seed:e2e && npm run dev",
     env: {
-      NODE_ENV: "test"
+      NODE_ENV: "test",
+      POSTGRES_PASSWORD: "mypassword",
+      POSTGRES_HOST: "localhost",
+      POSTGRES_PORT: "5433",
+      POSTGRES_DATABASE: "chat_group_e2e_tests",
+      POSTGRES_USER: "admin",
     },
     url: baseURL,
     timeout: 120 * 1000,
