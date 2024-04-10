@@ -75,7 +75,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run seed && npm run dev",
+    command: "npm run seed:e2e && npm run dev",
     env: {
       NODE_ENV: "test"
     },
