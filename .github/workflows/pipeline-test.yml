@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Connect to PostgreSQL
-        run: npm run seed
+        run: npm run seed:e2e
         env:
             POSTGRES_PASSWORD: "mypassword"
             POSTGRES_HOST: "localhost"
