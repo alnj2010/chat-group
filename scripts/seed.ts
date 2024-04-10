@@ -1,5 +1,13 @@
 import { Client } from "pg";
-import * as core from '@actions/core';
+import * as core from "@actions/core";
+
+function log(msg: string) {
+  core.debug(msg);
+  core.info(msg);
+  console.log(msg);
+  console.debug(msg);
+  console.info(msg);
+}
 
 async function main() {
   const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD;
@@ -7,17 +15,17 @@ async function main() {
   const POSTGRES_PORT = process.env.POSTGRES_PORT;
   const POSTGRES_DATABASE = process.env.POSTGRES_DATABASE;
   const POSTGRES_USER = process.env.POSTGRES_USER;
-  core.debug(
+  log(
     `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}`
   );
-  core.debug(JSON.stringify(process.env));
+  log(JSON.stringify(process.env));
   const client = new Client({
     connectionString: `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}`,
   });
-  
+
   try {
     await client.connect();
-    core.debug("connected");
+    log("connected");
 
     await client.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -31,7 +39,7 @@ async function main() {
       photo VARCHAR(255)
     );`);
 
-    core.debug("CREATE TABLE IF NOT EXISTS users executed!");
+    log("CREATE TABLE IF NOT EXISTS users executed!");
   } catch (error) {
     console.error(error);
   } finally {
