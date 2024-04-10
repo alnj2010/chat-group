@@ -20,7 +20,7 @@ async function main() {
       id SERIAL PRIMARY KEY,
       uuid VARCHAR(50) NOT NULL UNIQUE,
       email VARCHAR(50) NOT NULL UNIQUE,
-      password VARCHAR(50) NOT NULL,
+      password VARCHAR(250) NOT NULL,
       name VARCHAR(50),
       phone VARCHAR(25),
       bio VARCHAR(255),
