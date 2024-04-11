@@ -5,7 +5,6 @@ const PORT = process.env.PORT || 3000;
 
 const baseURL = `http://127.0.0.1:${PORT}`;
 
-console.log(process.env)
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -76,7 +75,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run seed:e2e && npm run dev",
+    command: "npm run dev:e2e",
     env: {
       NODE_ENV: "test",
     },

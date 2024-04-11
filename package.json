@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run seed:dev && next dev",
+    "dev:e2e": "npm run seed:e2e && next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
@@ -12,7 +13,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "lint": "next lint",
-    "seed:e2e": "ts-node -P tsconfig.scripts.json ./scripts/seed.ts",
+    "seed:e2e": "ts-node -P tsconfig.scripts.json -r dotenv/config ./scripts/seed.ts dotenv_config_path=./.env.test.local",
     "seed:dev": "ts-node -P tsconfig.scripts.json -r dotenv/config ./scripts/seed.ts dotenv_config_path=./.env.development.local"
   },
   "dependencies": {
