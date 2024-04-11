@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 const baseURL = `http://127.0.0.1:${PORT}`;
 
+console.log(process.env)
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
