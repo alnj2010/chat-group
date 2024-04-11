@@ -3,17 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run seed:dev && next dev",
+    "dev:e2e": "npm run seed:e2e && next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
     "test:ci": "jest --ci",
-    "test:e2e": "playwright test",
     "test:watch": "jest --watch",
-    "lint": "next lint"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "lint": "next lint",
+    "seed:e2e": "ts-node -P tsconfig.scripts.json -r dotenv/config ./scripts/seed.ts dotenv_config_path=./.env.test.local",
+    "seed:dev": "ts-node -P tsconfig.scripts.json -r dotenv/config ./scripts/seed.ts dotenv_config_path=./.env.development.local"
   },
   "dependencies": {
+    "@actions/core": "^1.10.1",
+    "dotenv": "^16.4.5",
     "next": "14.1.4",
+    "next-auth": "^4.24.7",
+    "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -23,6 +31,7 @@
     "@testing-library/react": "^14.2.2",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
+    "@types/pg": "^8.11.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",

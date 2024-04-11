@@ -67,6 +67,20 @@ jobs:
   Check_E2E_Test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: chat_group_e2e_tests
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -79,6 +93,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
+        env:
+          POSTGRES_PASSWORD: "mypassword"
+          POSTGRES_HOST: "localhost"
+          POSTGRES_PORT: 5432
+          POSTGRES_DATABASE: "chat_group_e2e_tests"
+          POSTGRES_USER: "admin"
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
@@ -106,7 +126,8 @@ jobs:
 
   Deploy-Production:
     if: ${{github.event_name == 'push'}}
-    needs: [Check_ESLint, Check_Build, Check_E2E_Test, Check_Unit_Integration_Test]
+    needs:
+      [Check_ESLint, Check_Build, Check_E2E_Test, Check_Unit_Integration_Test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
