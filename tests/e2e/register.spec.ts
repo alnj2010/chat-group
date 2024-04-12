@@ -5,10 +5,8 @@ test("I can register a new account", async ({ page, browserName }) => {
   const registerLink = page.getByTestId("register-link");
   await registerLink.click();
 
-  const userEmailTextField = page.getByTestId("user-email-register-textfield");
-  const userPasswordTextField = page.getByTestId(
-    "user-password-register-textfield"
-  );
+  const userEmailTextField = page.getByTestId("textfield-user-email");
+  const userPasswordTextField = page.getByTestId("textfield-user-password");
   const id = Math.random().toString().substring(2, 5);
   await userEmailTextField.fill(
     `userDummy${browserName}${id}${Date.now()}@email.com`
