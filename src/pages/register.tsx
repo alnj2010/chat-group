@@ -3,29 +3,57 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
+import { ZodError, z } from "zod";
+
+const credentialsSchema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+      invalid_type_error: "Email must be a string",
+    })
+    .email("Invalid email"),
+  password: z
+    .string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    })
+    .min(4, "Password length must be greater than 4 character"),
+});
 
 export default function Register() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<Array<string>>([]);
+  const disableSubmitButton = !(email && password);
 
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const res = await fetch("/api/auth/register", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    const resSignIn = await signIn("credentials", {
-      email: email,
-      password: password,
-      redirect: false,
-    });
+    try {
+      const credentials = credentialsSchema.parse({ email, password });
 
-    if (resSignIn && resSignIn.ok) {
-      router.push("/profile/edit");
+      await fetch("/api/auth/register", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(credentials),
+      });
+
+      const resSignIn = await signIn("credentials", {
+        ...credentials,
+        redirect: false,
+      });
+
+      if (resSignIn && resSignIn.ok) {
+        router.push("/profile/edit");
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        setErrors(error.errors.map((e) => e.message));
+      } else if (error instanceof Error) {
+        setErrors([error.message]);
+      }
     }
   };
 
@@ -68,7 +96,7 @@ export default function Register() {
                   className="p-3 pl-12 border border-[#BDBDBD] rounded-lg w-full h-12 text-base font-normal placeholder:text-[#828282]"
                   placeholder="Email"
                   name="email"
-                  type="email"
+                  type="text"
                   data-testid="textfield-user-email"
                   onChange={(e) => setEmail(e.target.value ?? "")}
                 />
@@ -94,10 +122,32 @@ export default function Register() {
 
               <button
                 data-testid="register-button"
-                className="w-full h-10 bg-[#2F80ED] rounded-lg text-base font-semibold text-white"
+                className="w-full h-10 bg-[#2F80ED] rounded-lg text-base font-semibold text-white disabled:bg-[#828282]"
+                disabled={disableSubmitButton}
               >
                 Start coding now
               </button>
+              {errors.length ? (
+                <div className="mt-1 p-3 bg-[#FED6D6] rounded">
+                  <div className="pb-1 text-base font-semibold text-[#333333]">
+                    {errors.length} error{errors.length > 1 ? "s" : ""}{" "}
+                    {errors.length > 1 ? "have" : "has"} just occurred
+                  </div>
+                  <div className="pb-1 text-sm font-normal text-[#333333]">
+                    There were the following problems:
+                  </div>
+                  <ul
+                    data-testid="error-messages"
+                    className="pl-5 text-sm font-semibold text-[#333333] list-disc"
+                  >
+                    {errors.map((msg) => (
+                      <li key={msg}>{msg}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <></>
+              )}
             </form>
           </div>
 
@@ -146,9 +196,13 @@ export default function Register() {
 
           <div className="login-link-container text-center">
             <div className="text-sm font-normal text-[#828282]">
-              Already a member? {" "}
+              Already a member?{" "}
               <span>
-                <Link href="/" data-testid="login-link" className="text-[#2D9CDB]">
+                <Link
+                  href="/"
+                  data-testid="login-link"
+                  className="text-[#2D9CDB]"
+                >
                   Login
                 </Link>
               </span>
@@ -156,8 +210,12 @@ export default function Register() {
           </div>
         </div>
         <div className="auth-footer-container flex justify-between">
-          <div className="text-sm font-normal text-[#828282]">created by <span className="font-semibold underline">anavarro</span></div>
-          <div className="text-sm font-normal text-[#828282]">devChallenges.io</div>
+          <div className="text-sm font-normal text-[#828282]">
+            created by <span className="font-semibold underline">anavarro</span>
+          </div>
+          <div className="text-sm font-normal text-[#828282]">
+            devChallenges.io
+          </div>
         </div>
       </div>
     </div>
