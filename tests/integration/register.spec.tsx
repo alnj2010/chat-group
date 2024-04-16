@@ -4,12 +4,16 @@ import "@testing-library/jest-dom";
 import Register from "@/pages/register";
 import mockRouter from "next-router-mock";
 import { MemoryRouterProvider } from "next-router-mock/MemoryRouterProvider";
+import { enableFetchMocks } from "jest-fetch-mock";
 
+jest.mock("next-auth/react");
+enableFetchMocks();
 jest.mock("next/router", () => require("next-router-mock"));
 
 const userAuthDummy = { email: "userDummy@email.com", password: "1234" };
 describe("Register page", () => {
   beforeEach(() => {
+    //fetchMock.doMock();
     render(<Register />, { wrapper: MemoryRouterProvider });
   });
 
@@ -78,6 +82,31 @@ describe("Register page", () => {
     expect(errorMessages.childElementCount).toBe(1);
     expect(errorMessages.firstChild?.textContent).toContain(
       "Password length must be greater than 4 character"
+    );
+  });
+
+  it("When register form is submited but the user already exist should show a messages error", async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify({ error: "email already exist" }),
+      {
+        status: 409,
+      }
+    );
+
+    const textFieldUserEmail = screen.getByTestId("textfield-user-email");
+    const textFieldUserPassword = screen.getByTestId("textfield-user-password");
+
+    await userEvent.type(textFieldUserEmail, userAuthDummy.email);
+    await userEvent.type(textFieldUserPassword, userAuthDummy.password);
+
+    const registerButton = screen.getByTestId("register-button");
+
+    await userEvent.click(registerButton);
+
+    const errorMessages = screen.getByTestId("error-messages");
+    expect(errorMessages.childElementCount).toBe(1);
+    expect(errorMessages.firstChild?.textContent).toContain(
+      "email already exist"
     );
   });
 });

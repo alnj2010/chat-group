@@ -32,13 +32,30 @@ export default function Register() {
     try {
       const credentials = credentialsSchema.parse({ email, password });
 
-      await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
         headers: {
           "Content-Type": "application/json",
         },
         method: "POST",
         body: JSON.stringify(credentials),
       });
+
+      if (!res.ok) {
+        let payload;
+        try {
+          payload = await res.json();
+        } catch (error) {
+          throw new Error("server error");
+        }
+
+        if (
+          typeof payload === "object" &&
+          !Array.isArray(payload) &&
+          payload !== null
+        ) {
+          throw new Error(payload.error);
+        }
+      }
 
       const resSignIn = await signIn("credentials", {
         ...credentials,
