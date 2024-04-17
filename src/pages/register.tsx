@@ -1,79 +1,9 @@
-import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { ZodError, z } from "zod";
-
-const credentialsSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email("Invalid email"),
-  password: z
-    .string({
-      required_error: "Password is required",
-      invalid_type_error: "Password must be a string",
-    })
-    .min(4, "Password length must be greater than 4 character"),
-});
+import AuthForm from "@/components/AuthForm";
+import { LOGIN_PAGE_ROUTE } from "@/constanst";
 
 export default function Register() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<Array<string>>([]);
-  const disableSubmitButton = !(email && password);
-
-  const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const credentials = credentialsSchema.parse({ email, password });
-
-      const res = await fetch("/api/auth/register", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(credentials),
-      });
-
-      if (!res.ok) {
-        let payload;
-        try {
-          payload = await res.json();
-        } catch (error) {
-          throw new Error("server error");
-        }
-
-        if (
-          typeof payload === "object" &&
-          !Array.isArray(payload) &&
-          payload !== null
-        ) {
-          throw new Error(payload.error);
-        }
-      }
-
-      const resSignIn = await signIn("credentials", {
-        ...credentials,
-        redirect: false,
-      });
-
-      if (resSignIn && resSignIn.ok) {
-        router.push("/profile/edit");
-      }
-    } catch (error) {
-      if (error instanceof ZodError) {
-        setErrors(error.errors.map((e) => e.message));
-      } else if (error instanceof Error) {
-        setErrors([error.message]);
-      }
-    }
-  };
-
   return (
     <div className="flex justify-center items-center sm:h-screen">
       <div className="auth-container py-4 px-5 sm:w-[473px]">
@@ -100,72 +30,7 @@ export default function Register() {
           </div>
 
           <div className="form-container pb-6">
-            <form onSubmit={onSubmitHandler}>
-              <div className="pb-4 relative">
-                <Image
-                  className="pb-4 absolute top-3 left-3"
-                  src="/mail.svg"
-                  alt="envelope icon"
-                  width={24}
-                  height={24}
-                />
-                <input
-                  className="p-3 pl-12 border border-[#BDBDBD] rounded-lg w-full h-12 text-base font-normal placeholder:text-[#828282]"
-                  placeholder="Email"
-                  name="email"
-                  type="text"
-                  data-testid="textfield-user-email"
-                  onChange={(e) => setEmail(e.target.value ?? "")}
-                />
-              </div>
-
-              <div className="pb-4 relative">
-                <Image
-                  className="pb-4 absolute top-3 left-3"
-                  src="/lock.svg"
-                  alt="envelope icon"
-                  width={24}
-                  height={24}
-                />
-                <input
-                  className="p-3 pl-12 border border-[#BDBDBD] rounded-lg w-full h-12 text-base font-normal placeholder:text-[#828282]"
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  data-testid="textfield-user-password"
-                  onChange={(e) => setPassword(e.target.value ?? "")}
-                />
-              </div>
-
-              <button
-                data-testid="register-button"
-                className="w-full h-10 bg-[#2F80ED] rounded-lg text-base font-semibold text-white disabled:bg-[#828282]"
-                disabled={disableSubmitButton}
-              >
-                Start coding now
-              </button>
-              {errors.length ? (
-                <div className="mt-1 p-3 bg-[#FED6D6] rounded">
-                  <div className="pb-1 text-base font-semibold text-[#333333]">
-                    {errors.length} error{errors.length > 1 ? "s" : ""}{" "}
-                    {errors.length > 1 ? "have" : "has"} just occurred
-                  </div>
-                  <div className="pb-1 text-sm font-normal text-[#333333]">
-                    There were the following problems:
-                  </div>
-                  <ul
-                    data-testid="error-messages"
-                    className="pl-5 text-sm font-semibold text-[#333333] list-disc"
-                  >
-                    {errors.map((msg) => (
-                      <li key={msg}>{msg}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                <></>
-              )}
-            </form>
+            <AuthForm />
           </div>
 
           <div className="oauth-container pb-7 flex justify-center items-center flex-col">
@@ -216,7 +81,7 @@ export default function Register() {
               Already a member?{" "}
               <span>
                 <Link
-                  href="/"
+                  href={LOGIN_PAGE_ROUTE}
                   data-testid="login-link"
                   className="text-[#2D9CDB]"
                 >

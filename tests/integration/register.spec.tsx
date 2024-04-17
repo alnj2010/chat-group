@@ -5,6 +5,7 @@ import Register from "@/pages/register";
 import mockRouter from "next-router-mock";
 import { MemoryRouterProvider } from "next-router-mock/MemoryRouterProvider";
 import { enableFetchMocks } from "jest-fetch-mock";
+import { EMAIL_ALREADY_EXIST, EMAIL_IS_INVALID, LOGIN_PAGE_ROUTE, PASSWORD_FIELD_LENGTH_IS_TOO_SHORT } from "@/constanst";
 
 jest.mock("next-auth/react");
 enableFetchMocks();
@@ -32,7 +33,7 @@ describe("Register page", () => {
   it("When Login Link is clicked should go to login page", async () => {
     const loginLink = screen.getByTestId("login-link");
     await userEvent.click(loginLink);
-    expect(mockRouter.asPath).toEqual("/");
+    expect(mockRouter.asPath).toEqual(LOGIN_PAGE_ROUTE);
   });
 
   it("When there is not info in the text fields the register button is disabled", async () => {
@@ -64,7 +65,7 @@ describe("Register page", () => {
 
     const errorMessages = screen.getByTestId("error-messages");
     expect(errorMessages.childElementCount).toBe(1);
-    expect(errorMessages.firstChild?.textContent).toContain("Invalid email");
+    expect(errorMessages.firstChild?.textContent).toContain(EMAIL_IS_INVALID);
   });
 
   it("When register form is submited but there is a with less than (4) characters should show a messages error", async () => {
@@ -81,17 +82,14 @@ describe("Register page", () => {
     const errorMessages = screen.getByTestId("error-messages");
     expect(errorMessages.childElementCount).toBe(1);
     expect(errorMessages.firstChild?.textContent).toContain(
-      "Password length must be greater than 4 character"
+      PASSWORD_FIELD_LENGTH_IS_TOO_SHORT
     );
   });
 
   it("When register form is submited but the user already exist should show a messages error", async () => {
-    fetchMock.mockResponseOnce(
-      JSON.stringify({ error: "email already exist" }),
-      {
-        status: 409,
-      }
-    );
+    fetchMock.mockResponseOnce(JSON.stringify({ error: EMAIL_ALREADY_EXIST }), {
+      status: 409,
+    });
 
     const textFieldUserEmail = screen.getByTestId("textfield-user-email");
     const textFieldUserPassword = screen.getByTestId("textfield-user-password");
@@ -106,7 +104,7 @@ describe("Register page", () => {
     const errorMessages = screen.getByTestId("error-messages");
     expect(errorMessages.childElementCount).toBe(1);
     expect(errorMessages.firstChild?.textContent).toContain(
-      "email already exist"
+      EMAIL_ALREADY_EXIST
     );
   });
 });
