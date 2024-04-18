@@ -5,13 +5,24 @@ import Register from "@/pages/register";
 import mockRouter from "next-router-mock";
 import { MemoryRouterProvider } from "next-router-mock/MemoryRouterProvider";
 import { enableFetchMocks } from "jest-fetch-mock";
-import { EMAIL_ALREADY_EXIST, EMAIL_IS_INVALID, LOGIN_PAGE_ROUTE, PASSWORD_FIELD_LENGTH_IS_TOO_SHORT } from "@/constanst";
+import {
+  EDIT_PROFILE_PAGE_ROUTE,
+  EMAIL_ALREADY_EXIST,
+  EMAIL_IS_INVALID,
+  LOGIN_PAGE_ROUTE,
+  PASSWORD_FIELD_LENGTH_IS_TOO_SHORT,
+} from "@/constanst";
+import { credentialsDummy } from "../dummies";
+import { APIErrorData } from "@/types";
 
-jest.mock("next-auth/react");
-enableFetchMocks();
+jest.mock("next-auth/react", () => {
+  return {
+    signIn: jest.fn().mockReturnValue({ ok: true }),
+  };
+});
 jest.mock("next/router", () => require("next-router-mock"));
+enableFetchMocks();
 
-const userAuthDummy = { email: "userDummy@email.com", password: "1234" };
 describe("Register page", () => {
   beforeEach(() => {
     //fetchMock.doMock();
@@ -44,8 +55,8 @@ describe("Register page", () => {
   it("When register textfields are filled the register button should be active", async () => {
     const textFieldUserEmail = screen.getByTestId("textfield-user-email");
     const textFieldUserPassword = screen.getByTestId("textfield-user-password");
-    await userEvent.type(textFieldUserEmail, userAuthDummy.email);
-    await userEvent.type(textFieldUserPassword, userAuthDummy.password);
+    await userEvent.type(textFieldUserEmail, credentialsDummy.email);
+    await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
     const registerButton = screen.getByTestId("register-button");
 
@@ -57,7 +68,7 @@ describe("Register page", () => {
     const textFieldUserPassword = screen.getByTestId("textfield-user-password");
 
     await userEvent.type(textFieldUserEmail, "invalidemail");
-    await userEvent.type(textFieldUserPassword, userAuthDummy.password);
+    await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
     const registerButton = screen.getByTestId("register-button");
 
@@ -72,7 +83,7 @@ describe("Register page", () => {
     const textFieldUserEmail = screen.getByTestId("textfield-user-email");
     const textFieldUserPassword = screen.getByTestId("textfield-user-password");
 
-    await userEvent.type(textFieldUserEmail, userAuthDummy.email);
+    await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, "123");
 
     const registerButton = screen.getByTestId("register-button");
@@ -87,15 +98,16 @@ describe("Register page", () => {
   });
 
   it("When register form is submited but the user already exist should show a messages error", async () => {
-    fetchMock.mockResponseOnce(JSON.stringify({ error: EMAIL_ALREADY_EXIST }), {
+    const apiErrorsDataDummy: APIErrorData = { errors: [EMAIL_ALREADY_EXIST] };
+    fetchMock.mockResponseOnce(JSON.stringify(apiErrorsDataDummy), {
       status: 409,
     });
 
     const textFieldUserEmail = screen.getByTestId("textfield-user-email");
     const textFieldUserPassword = screen.getByTestId("textfield-user-password");
 
-    await userEvent.type(textFieldUserEmail, userAuthDummy.email);
-    await userEvent.type(textFieldUserPassword, userAuthDummy.password);
+    await userEvent.type(textFieldUserEmail, credentialsDummy.email);
+    await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
     const registerButton = screen.getByTestId("register-button");
 
@@ -106,5 +118,23 @@ describe("Register page", () => {
     expect(errorMessages.firstChild?.textContent).toContain(
       EMAIL_ALREADY_EXIST
     );
+  });
+
+  it("When register form is submited correctly should go to the edit profile page", async () => {
+    fetchMock.mockResponseOnce("", {
+      status: 200,
+    });
+
+    const textFieldUserEmail = screen.getByTestId("textfield-user-email");
+    const textFieldUserPassword = screen.getByTestId("textfield-user-password");
+
+    await userEvent.type(textFieldUserEmail, credentialsDummy.email);
+    await userEvent.type(textFieldUserPassword, credentialsDummy.password);
+
+    const registerButton = screen.getByTestId("register-button");
+
+    await userEvent.click(registerButton);
+
+    expect(mockRouter.asPath).toEqual(EDIT_PROFILE_PAGE_ROUTE);
   });
 });

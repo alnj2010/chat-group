@@ -11,6 +11,16 @@ const config: Config = {
   coverageProvider: "v8",
   testEnvironment: "jsdom",
   modulePathIgnorePatterns: ["./tests/e2e"],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+  coveragePathIgnorePatterns: [
+    "<rootDir>/src/lib",
+    "<rootDir>/src/repositories",
+    "<rootDir>/src/pages/_app.tsx",
+    "<rootDir>/src/pages/_document.tsx",
+    "<rootDir>/src/pages/500.tsx",
+  ],
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

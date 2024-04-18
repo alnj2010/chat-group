@@ -8,7 +8,7 @@ import {
 } from "@/constanst";
 import FormValidationError from "@/errors/form-validation-error";
 import ValidatorError from "@/errors/validator-error";
-import { APIErrorResponse, Credentials } from "@/types";
+import { APIErrorData, Credentials } from "@/types";
 import { ZodError, ZodType, z } from "zod";
 
 const credentialsSchema = z.object({
@@ -27,8 +27,8 @@ const credentialsSchema = z.object({
 }) satisfies ZodType<Credentials>;
 
 const apiErrorResponseSchema = z.object({
-  error: z.string(),
-}) satisfies ZodType<APIErrorResponse>;
+  errors: z.array(z.string()),
+}) satisfies ZodType<APIErrorData>;
 
 function validate<T>(object: T, schema: z.AnyZodObject): T {
   try {
@@ -56,8 +56,12 @@ export function validateAuthFormCredentials(
   }
 }
 
+export function validateCredentials(credentials: Credentials) {
+  return validate<Credentials>(credentials, credentialsSchema);
+}
+
 export function validateAPIErrorResponse(
-  apiErrorResponse: APIErrorResponse
-): APIErrorResponse {
-  return validate<APIErrorResponse>(apiErrorResponse, apiErrorResponseSchema);
+  apiErrorResponse: APIErrorData
+): APIErrorData {
+  return validate<APIErrorData>(apiErrorResponse, apiErrorResponseSchema);
 }

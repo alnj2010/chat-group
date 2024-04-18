@@ -17,8 +17,7 @@ export async function callAPISignUpFromAuthForm(credentials: Credentials) {
     if (!res.ok) {
       const payload = await res.json();
       const payloadParsed = validateAPIErrorResponse(payload);
-
-      throw new FormValidationError([payloadParsed.error]);
+      throw new FormValidationError(payloadParsed.errors);
     }
   } catch (error) {
     throw error;

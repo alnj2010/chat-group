@@ -9,13 +9,18 @@ import { EDIT_PROFILE_PAGE_ROUTE, ERROR_PAGE_ROUTE } from "@/constanst";
 
 export default function AuthForm() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [errors, setErrors] = useState<Array<string>>([]);
-  const disableSubmitButton = !(email && password);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const disableSubmitButton = !(email && password) || loading;
 
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const credentials: Credentials = validateAuthFormCredentials({
         email,
@@ -32,6 +37,8 @@ export default function AuthForm() {
       } else {
         router.push(ERROR_PAGE_ROUTE);
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (

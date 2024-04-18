@@ -17,3 +17,11 @@ export const PASSWORD_FIELD_IS_REQUIRED = "PASSWORD is required";
 export const PASSWORD_FIELD_MUST_BE_A_STRING = "Email must be a string";
 export const PASSWORD_FIELD_LENGTH_IS_TOO_SHORT =
   "Password length must be greater than 4 character";
+
+export const API_ERROR_NOT_FOUND = "Not Found";
+export const API_ERROR_BAD_REQUEST = "Bad request";
+export const API_ERROR_INTERNAL_SERVER = "Internal server error";
+export const API_ERROR_DB = "DB error";
+
+
+export const API_SUCCESS_SIGN_UP = "Success";
