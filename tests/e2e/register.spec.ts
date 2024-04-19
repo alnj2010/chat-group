@@ -1,14 +1,13 @@
+import { EDIT_PROFILE_PAGE_ROUTE, LOGIN_PAGE_ROUTE } from "@/constanst";
 import { test, expect } from "@playwright/test";
 
 test("I can register a new account", async ({ page, browserName }) => {
-  await page.goto("/");
+  await page.goto(LOGIN_PAGE_ROUTE);
   const registerLink = page.getByTestId("register-link");
   await registerLink.click();
 
-  const userEmailTextField = page.getByTestId("user-email-register-textfield");
-  const userPasswordTextField = page.getByTestId(
-    "user-password-register-textfield"
-  );
+  const userEmailTextField = page.getByTestId("textfield-user-email");
+  const userPasswordTextField = page.getByTestId("textfield-user-password");
   const id = Math.random().toString().substring(2, 5);
   await userEmailTextField.fill(
     `userDummy${browserName}${id}${Date.now()}@email.com`
@@ -18,7 +17,7 @@ test("I can register a new account", async ({ page, browserName }) => {
   const registerButton = page.getByTestId("register-button");
 
   await registerButton.click();
-  await page.waitForURL("**/profile/edit");
+  await page.waitForURL(`**${EDIT_PROFILE_PAGE_ROUTE}`);
 
   const changeInfoSection = await page.getByTestId("change-info-section");
 
