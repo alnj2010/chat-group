@@ -12,7 +12,7 @@ export class RegisterPage {
     this.userPasswordTextField = this.page.getByTestId(
       "textfield-user-password"
     );
-    this.registerButton = this.page.getByTestId("register-button");
+    this.registerButton = this.page.getByTestId("credentials-submit-button");
   }
 
   async goto() {

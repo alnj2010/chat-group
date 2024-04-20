@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
-import Register from "@/pages/register";
 import mockRouter from "next-router-mock";
-import { MemoryRouterProvider } from "next-router-mock/MemoryRouterProvider";
-import { enableFetchMocks } from "jest-fetch-mock";
-import { EDIT_PROFILE_PAGE_ROUTE, LOGIN_PAGE_ROUTE } from "@/constanst";
+
+import Login from "@/pages";
+import { MemoryRouterProvider } from "next-router-mock/dist/MemoryRouterProvider";
+import userEvent from "@testing-library/user-event";
+import { PROFILE_PAGE_ROUTE, REGISTER_PAGE_ROUTE } from "@/constanst";
 import { credentialsDummy } from "../dummies";
+import { enableFetchMocks } from "jest-fetch-mock";
 
 jest.mock("next-auth/react", () => {
   return {
@@ -16,9 +16,10 @@ jest.mock("next-auth/react", () => {
 jest.mock("next/router", () => require("next-router-mock"));
 enableFetchMocks();
 
-describe("Register page", () => {
+describe("Login page", () => {
   beforeEach(() => {
-    render(<Register />, { wrapper: MemoryRouterProvider });
+    //fetchMock.doMock();
+    render(<Login />, { wrapper: MemoryRouterProvider });
   });
 
   it("Should render properly", () => {
@@ -31,13 +32,13 @@ describe("Register page", () => {
     screen.getByTestId("jump-to");
   });
 
-  it("When Login Link is clicked should go to login page", async () => {
+  it("When Register Link is clicked should go to register page", async () => {
     const loginLink = screen.getByTestId("jump-to");
     await userEvent.click(loginLink);
-    expect(mockRouter.asPath).toEqual(LOGIN_PAGE_ROUTE);
+    expect(mockRouter.asPath).toEqual(REGISTER_PAGE_ROUTE);
   });
 
-  it("When credentials form is submited correctly should go to the edit profile page", async () => {
+  it("When credentials form is submited correctly should go to the profile page", async () => {
     fetchMock.mockResponseOnce("", {
       status: 200,
     });
@@ -54,6 +55,6 @@ describe("Register page", () => {
 
     await userEvent.click(credentialsSubmitButton);
 
-    expect(mockRouter.asPath).toEqual(EDIT_PROFILE_PAGE_ROUTE);
+    expect(mockRouter.asPath).toEqual(PROFILE_PAGE_ROUTE);
   });
 });

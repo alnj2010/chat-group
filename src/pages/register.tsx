@@ -1,9 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
-import AuthForm from "@/components/AuthForm";
-import { LOGIN_PAGE_ROUTE } from "@/constanst";
+import { EDIT_PROFILE_PAGE_ROUTE, LOGIN_PAGE_ROUTE } from "@/constanst";
+import CredentialsForm from "@/components/CredentialsForm";
+import { Credentials } from "@/types";
+import { callAPICredentialsSignIn, callAPISignUpFromAuthForm } from "@/lib/api";
 
 export default function Register() {
+
+   const registerAction = async (credentials: Credentials) => {
+    await callAPISignUpFromAuthForm(credentials);
+    await callAPICredentialsSignIn(credentials);
+  };
   return (
     <div className="flex justify-center items-center sm:h-screen">
       <div className="auth-container py-4 px-5 sm:w-[473px]">
@@ -30,7 +37,11 @@ export default function Register() {
           </div>
 
           <div className="form-container pb-6">
-            <AuthForm />
+            <CredentialsForm
+              action={registerAction}
+              redirectTo={EDIT_PROFILE_PAGE_ROUTE}
+              textButton="Start coding now "
+            />
           </div>
 
           <div className="oauth-container pb-7 flex justify-center items-center flex-col">
@@ -76,13 +87,13 @@ export default function Register() {
             </div>
           </div>
 
-          <div className="login-link-container text-center">
+          <div className="jump-to-container text-center">
             <div className="text-sm font-normal text-[#828282]">
               Already a member?{" "}
               <span>
                 <Link
                   href={LOGIN_PAGE_ROUTE}
-                  data-testid="login-link"
+                  data-testid="jump-to"
                   className="text-[#2D9CDB]"
                 >
                   Login

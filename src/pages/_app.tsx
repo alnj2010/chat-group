@@ -1,16 +1,21 @@
 import "@/styles/globals.css";
+import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { Noto_Sans_Display } from "next/font/google";
+import { ReactElement, ReactNode } from "react";
 
-const notoSans = Noto_Sans_Display({
-  subsets: ["latin"],
-  variable: "--font-noto-sans",
-});
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <main className={notoSans.className}>
-      <Component {...pageProps} />;
-    </main>
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
+      <Component {...pageProps} />
   );
 }

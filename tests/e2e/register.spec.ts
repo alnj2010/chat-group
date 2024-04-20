@@ -3,18 +3,9 @@ import {
   EMAIL_ALREADY_EXIST,
   REGISTER_API_ROUTE,
 } from "@/constanst";
-import { Credentials } from "@/types";
 import { test as base, expect } from "@playwright/test";
 import { RegisterPage } from "./fixtures/register-page";
-
-function getRandomCredentialsByBrowserName(browserName: string): Credentials {
-  const id = Math.random().toString().substring(2, 5);
-  const credentials: Credentials = {
-    email: `userDummy${browserName}${id}${Date.now()}@email.com`,
-    password: "passwordDummy",
-  };
-  return credentials;
-}
+import { getRandomCredentialsByBrowserName } from "../dummies";
 
 const test = base.extend<{ registerPage: RegisterPage }>({
   registerPage: async ({ page }, use) => {
