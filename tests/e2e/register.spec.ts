@@ -49,9 +49,9 @@ test("When I fill the register form and press submit button but the email is dup
   });
 
   await registerPage.submitCredentials(credentials);
-  await page.waitForSelector('[data-testid="error-messages"]');
+  await page.waitForSelector('[data-testid="sign-up-error-messages"]');
 
-  const errorMessages = await page.getByTestId("error-messages");
+  const errorMessages = await page.getByTestId("sign-up-error-messages");
 
   await expect(errorMessages).toContainText(EMAIL_ALREADY_EXIST);
 });

@@ -8,16 +8,20 @@ export class RegisterPage {
   private readonly registerButton: Locator;
 
   constructor(public readonly page: Page) {
-    this.userEmailTextField = this.page.getByTestId("textfield-user-email");
-    this.userPasswordTextField = this.page.getByTestId(
-      "textfield-user-password"
+    this.userEmailTextField = this.page.getByTestId(
+      "sign-up-textfield-user-email"
     );
-    this.registerButton = this.page.getByTestId("credentials-submit-button");
+    this.userPasswordTextField = this.page.getByTestId(
+      "sign-up-textfield-user-password"
+    );
+    this.registerButton = this.page.getByTestId(
+      "sign-up-credentials-submit-button"
+    );
   }
 
   async goto() {
     await this.page.goto(LOGIN_PAGE_ROUTE);
-    const registerLink = this.page.getByTestId("register-link");
+    const registerLink = this.page.getByTestId("jump-to");
     await registerLink.click();
   }
 
@@ -26,5 +30,4 @@ export class RegisterPage {
     await this.userPasswordTextField.fill(credentials.password);
     await this.registerButton.click();
   }
-
 }

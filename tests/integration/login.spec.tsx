@@ -23,7 +23,7 @@ describe("Login page", () => {
   });
 
   it("Should render properly", () => {
-    screen.getByTestId("credentials-form");
+    screen.getByTestId("sign-in-credentials-form");
 
     screen.getByTestId("google-provider");
     screen.getByTestId("facebook-provider");
@@ -43,14 +43,14 @@ describe("Login page", () => {
       status: 200,
     });
 
-    const textFieldUserEmail = screen.getByTestId("textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("textfield-user-password");
+    const textFieldUserEmail = screen.getByTestId("sign-in-textfield-user-email");
+    const textFieldUserPassword = screen.getByTestId("sign-in-textfield-user-password");
 
     await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
     const credentialsSubmitButton = screen.getByTestId(
-      "credentials-submit-button"
+      "sign-in-credentials-submit-button"
     );
 
     await userEvent.click(credentialsSubmitButton);

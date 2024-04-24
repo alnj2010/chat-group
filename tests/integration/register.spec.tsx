@@ -22,7 +22,7 @@ describe("Register page", () => {
   });
 
   it("Should render properly", () => {
-    screen.getByTestId("credentials-form");
+    screen.getByTestId("sign-up-credentials-form");
 
     screen.getByTestId("google-provider");
     screen.getByTestId("facebook-provider");
@@ -42,14 +42,14 @@ describe("Register page", () => {
       status: 200,
     });
 
-    const textFieldUserEmail = screen.getByTestId("textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("textfield-user-password");
+    const textFieldUserEmail = screen.getByTestId("sign-up-textfield-user-email");
+    const textFieldUserPassword = screen.getByTestId("sign-up-textfield-user-password");
 
     await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
     const credentialsSubmitButton = screen.getByTestId(
-      "credentials-submit-button"
+      "sign-up-credentials-submit-button"
     );
 
     await userEvent.click(credentialsSubmitButton);

@@ -1,5 +1,7 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getCredentialsByEmail } from "@/lib/db";
+import { createHash } from "node:crypto";
 
 export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
@@ -17,21 +19,21 @@ export const authOptions: AuthOptions = {
         password: {},
       },
       async authorize(credentials, req) {
-        let user;
         if (credentials) {
-          user = {
-            id: "1",
-            email: credentials.email,
-            password: credentials.password,
-          };
-        }
+          const user = await getCredentialsByEmail(credentials.email);
+          if (!user) return null;
 
-        // If no error and we have user data, return it
-        if (user) {
+          if (
+            createHash("sha256").update(credentials.password).digest("hex") !==
+            user.password
+          ) {
+            return null;
+          }
+
           return user;
+        } else {
+          return null;
         }
-        // Return null if user data could not be retrieved
-        return null;
       },
     }),
     // ...add more providers here

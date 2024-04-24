@@ -2,7 +2,7 @@ import { Credentials } from "@/types";
 import { validateAPIErrorResponse } from "./validators";
 import FormValidationError from "@/errors/form-validation-error";
 import { signIn } from "next-auth/react";
-import { REGISTER_API_ROUTE } from "@/constanst";
+import { INVALID_CREDENTIALS, REGISTER_API_ROUTE } from "@/constanst";
 
 export async function callAPISignUpFromAuthForm(credentials: Credentials) {
   try {
@@ -25,12 +25,20 @@ export async function callAPISignUpFromAuthForm(credentials: Credentials) {
 }
 
 export async function callAPICredentialsSignIn(credentials: Credentials) {
-  const resSignIn = await signIn("credentials", {
-    ...credentials,
-    redirect: false,
-  });
+  try {
+    const resSignIn = await signIn("credentials", {
+      ...credentials,
+      redirect: false,
+    });
 
-  if (!resSignIn || !resSignIn.ok) {
-    throw new Error("it was not posible sign in");
+    if (!resSignIn || !resSignIn.ok) {
+      if (!resSignIn || resSignIn.error == "undefined") {
+        throw new Error("it was not posible sign in");
+      } else {
+        throw new FormValidationError([INVALID_CREDENTIALS]);
+      }
+    }
+  } catch (error) {
+    throw error;
   }
 }

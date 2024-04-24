@@ -10,10 +10,12 @@ export default function CredentialsForm({
   action,
   redirectTo,
   textButton,
+  formId,
 }: {
   action: (credentials: Credentials) => Promise<void>;
   redirectTo: string;
   textButton: string;
+  formId: "" | "sign-in" | "sign-up";
 }) {
   const router = useRouter();
 
@@ -48,11 +50,11 @@ export default function CredentialsForm({
     }
   };
   return (
-    <form onSubmit={onSubmitHandler} data-testid="credentials-form">
+    <form onSubmit={onSubmitHandler} data-testid={`${formId}-credentials-form`}>
       <IconTextField
         placeholder="Email"
         alt="envelope icon"
-        data-testid="textfield-user-email"
+        data-testid={`${formId}-textfield-user-email`}
         name="email"
         onChange={(e) => setEmail(e.target.value ?? "")}
         src="/mail.svg"
@@ -61,7 +63,7 @@ export default function CredentialsForm({
       <IconTextField
         placeholder="Password"
         alt="lock icon"
-        data-testid="textfield-user-password"
+        data-testid={`${formId}-textfield-user-password`}
         name="password"
         onChange={(e) => setPassword(e.target.value ?? "")}
         src="/lock.svg"
@@ -69,7 +71,7 @@ export default function CredentialsForm({
       />
 
       <button
-        data-testid="credentials-submit-button"
+        data-testid={`${formId}-credentials-submit-button`}
         className="w-full h-10 bg-[#2F80ED] rounded-lg text-base font-semibold text-white disabled:bg-[#828282]"
         disabled={disableSubmitButton}
       >
@@ -85,7 +87,7 @@ export default function CredentialsForm({
             There were the following problems:
           </div>
           <ul
-            data-testid="error-messages"
+            data-testid={`${formId}-error-messages`}
             className="pl-5 text-sm font-semibold text-[#333333] list-disc"
           >
             {errors.map((msg) => (

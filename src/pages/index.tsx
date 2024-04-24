@@ -21,6 +21,7 @@ const Login: NextPageWithLayout = () => {
       jumpAdviceTo="Don’t have an account yet?"
     >
       <CredentialsForm
+        formId="sign-in"
         action={loginAction}
         redirectTo={PROFILE_PAGE_ROUTE}
         textButton="Login"

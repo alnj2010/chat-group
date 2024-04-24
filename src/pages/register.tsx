@@ -22,6 +22,7 @@ const Register: NextPageWithLayout = () => {
       jumpAdviceTo="Already a member?"
     >
       <CredentialsForm
+        formId="sign-up"
         action={registerAction}
         redirectTo={EDIT_PROFILE_PAGE_ROUTE}
         textButton="Start coding now"

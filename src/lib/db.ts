@@ -39,3 +39,20 @@ export async function userEmailExist(email: string): Promise<boolean> {
     throw new ApiError(500, API_ERROR_DB);
   }
 }
+
+export async function getCredentialsByEmail(
+  email: string
+): Promise<{ id: string; email: string; password: string } | null> {
+  try {
+    const result = await connection.query(
+      `SELECT * FROM users WHERE users.email='${email}';`
+    );
+    if (result.rowCount === 0) return null;
+
+    const [userRow] = result.rows;
+    return { id: userRow.id, email: userRow.email, password: userRow.password };
+  } catch (error) {
+    console.error(error);
+    throw new ApiError(500, API_ERROR_DB);
+  }
+}
