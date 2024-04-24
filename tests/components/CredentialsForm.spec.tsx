@@ -15,7 +15,7 @@ describe("CredentialsForm", () => {
   let action: jest.Mock;
   beforeEach(() => {
     action = jest.fn();
-    render(<CredentialsForm action={action} redirectTo="/" />, {
+    render(<CredentialsForm textButton="" action={action} redirectTo="/" />, {
       wrapper: MemoryRouterProvider,
     });
   });
