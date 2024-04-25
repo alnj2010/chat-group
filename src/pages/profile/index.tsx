@@ -16,5 +16,5 @@ export const getServerSideProps = (async (req) => {
 export default function Page({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) {
-  return <main data-testid="change-info-section">Edit profile</main>
+  return <main data-testid="profile-info-section">profile info</main>
 }

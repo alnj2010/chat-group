@@ -1,6 +1,10 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import { authorizeCredentials } from "@/lib/authorizers";
+import DBError from "@/errors/db-error";
+import AuthorizeError from "@/errors/authorize-error";
+
 export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
   pages: {
@@ -16,22 +20,21 @@ export const authOptions: AuthOptions = {
         email: {},
         password: {},
       },
-      async authorize(credentials, req) {
-        let user;
-        if (credentials) {
-          user = {
-            id: "1",
-            email: credentials.email,
-            password: credentials.password,
-          };
-        }
-
-        // If no error and we have user data, return it
-        if (user) {
+      async authorize(body) {
+        const credentials = {
+          email: body?.email ?? "",
+          password: body?.password ?? "",
+        };
+        try {
+          const user = await authorizeCredentials(credentials);
           return user;
+        } catch (error) {
+          if (error instanceof DBError || error instanceof AuthorizeError) {
+            return null;
+          } else {
+            throw error;
+          }
         }
-        // Return null if user data could not be retrieved
-        return null;
       },
     }),
     // ...add more providers here

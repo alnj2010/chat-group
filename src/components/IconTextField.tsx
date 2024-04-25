@@ -9,7 +9,9 @@ export default function IconTextField({
   onChange,
   src,
   alt,
+  disabled = false,
 }: {
+  disabled: boolean;
   placeholder: string;
   name: string;
   type: string;
@@ -28,6 +30,7 @@ export default function IconTextField({
         height={24}
       />
       <input
+        disabled={disabled}
         className="p-3 pl-12 border border-[#BDBDBD] rounded-lg w-full h-12 text-base font-normal placeholder:text-[#828282]"
         placeholder={placeholder}
         name={name}
