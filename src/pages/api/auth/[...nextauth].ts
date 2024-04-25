@@ -1,7 +1,9 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCredentialsByEmail } from "@/lib/db";
-import { createHash } from "node:crypto";
+
+import { authorizeCredentials } from "@/lib/authorizers";
+import DBError from "@/errors/db-error";
+import AuthorizeError from "@/errors/authorize-error";
 
 export const authOptions: AuthOptions = {
   // Configure one or more authentication providers
@@ -18,21 +20,20 @@ export const authOptions: AuthOptions = {
         email: {},
         password: {},
       },
-      async authorize(credentials) {
-        if (credentials) {
-          const user = await getCredentialsByEmail(credentials.email);
-          if (!user) return null;
-
-          if (
-            createHash("sha256").update(credentials.password).digest("hex") !==
-            user.password
-          ) {
-            return null;
-          }
-
+      async authorize(body) {
+        const credentials = {
+          email: body?.email ?? "",
+          password: body?.password ?? "",
+        };
+        try {
+          const user = await authorizeCredentials(credentials);
           return user;
-        } else {
-          return null;
+        } catch (error) {
+          if (error instanceof DBError || error instanceof AuthorizeError) {
+            return null;
+          } else {
+            throw error;
+          }
         }
       },
     }),

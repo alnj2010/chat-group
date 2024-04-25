@@ -1,8 +1,8 @@
-import { Credentials } from "@/types";
+import { Credentials, User } from "@/types";
 import { Pool } from "pg";
-import { createHash, randomUUID } from "crypto";
-import { ApiError } from "next/dist/server/api-utils";
-import { API_ERROR_DB } from "@/constanst";
+import { API_ERROR_DB, DB_ERROR_RECORD_NOT_FOUND } from "@/constanst";
+import DBError from "@/errors/db-error";
+import { generateUUID, hash } from "./crypto";
 
 const connection = new Pool({
   connectionString: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DATABASE}`,
@@ -12,11 +12,9 @@ const connection = new Pool({
 });
 
 export async function createUserByCredentials(credentials: Credentials) {
-  const uuid = randomUUID();
+  const uuid = generateUUID();
 
-  const hashedPassword = createHash("sha256")
-    .update(credentials.password)
-    .digest("hex");
+  const hashedPassword = hash(credentials.password);
 
   try {
     await connection.query(
@@ -24,7 +22,8 @@ export async function createUserByCredentials(credentials: Credentials) {
     );
   } catch (error) {
     console.error(error);
-    throw new ApiError(500, API_ERROR_DB);
+    throw new DBError(API_ERROR_DB);
+    //throw new ApiError(500, API_ERROR_DB);
   }
 }
 
@@ -36,23 +35,32 @@ export async function userEmailExist(email: string): Promise<boolean> {
     return result.rowCount !== 0;
   } catch (error) {
     console.error(error);
-    throw new ApiError(500, API_ERROR_DB);
+    throw new DBError(API_ERROR_DB);
+    //throw new ApiError(500, API_ERROR_DB);
   }
 }
 
-export async function getCredentialsByEmail(
-  email: string
-): Promise<{ id: string; email: string; password: string } | null> {
+export async function getUserByEmail(email: string): Promise<User> {
   try {
     const result = await connection.query(
       `SELECT * FROM users WHERE users.email='${email}';`
     );
-    if (result.rowCount === 0) return null;
+    if (result.rowCount === 0) throw new DBError(DB_ERROR_RECORD_NOT_FOUND);
 
     const [userRow] = result.rows;
-    return { id: userRow.id, email: userRow.email, password: userRow.password };
+
+    return {
+      id: userRow.id,
+      uuid: userRow.uuid,
+      email: userRow.email,
+      password: userRow.password,
+      name: userRow.name,
+      phone: userRow.phone,
+      bio: userRow.bio,
+      image: userRow.photo,
+    };
   } catch (error) {
     console.error(error);
-    throw new ApiError(500, API_ERROR_DB);
+    throw error;
   }
 }

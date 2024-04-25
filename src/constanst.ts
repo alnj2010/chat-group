@@ -27,3 +27,5 @@ export const API_ERROR_INTERNAL_SERVER = "Internal server error";
 export const API_ERROR_DB = "DB error";
 
 export const API_SUCCESS_SIGN_UP = "Success";
+
+export const DB_ERROR_RECORD_NOT_FOUND="Record not found"

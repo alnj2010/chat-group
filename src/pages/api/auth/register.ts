@@ -37,8 +37,6 @@ export default async function handler(
   } catch (error) {
     if (error instanceof ValidatorError) {
       return res.status(400).json({ errors: error.messages });
-    } else if (error instanceof ApiError) {
-      return res.status(error.statusCode).json({ errors: [error.message] });
     } else {
       return res.status(500).json({ errors: [API_ERROR_INTERNAL_SERVER] });
     }
