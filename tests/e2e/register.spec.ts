@@ -4,26 +4,28 @@ import {
   REGISTER_API_ROUTE,
 } from "@/constanst";
 import { test as base, expect } from "@playwright/test";
-import { RegisterPage } from "./fixtures/register-page";
 import { getRandomCredentialsByBrowserName } from "../dummies";
+import { CredentialsForm } from "./fixtures/credentials-form";
 
-const test = base.extend<{ registerPage: RegisterPage }>({
-  registerPage: async ({ page }, use) => {
-    const registerPage = new RegisterPage(page);
+const test = base.extend<{ credentialsForm: CredentialsForm }>({
+  credentialsForm: async ({ page }, use) => {
+    const credentialsForm = new CredentialsForm(page, "sign-up");
 
-    registerPage.goto();
+    credentialsForm.goto();
+    const registerLink = page.getByTestId("jump-to");
+    await registerLink.click();
 
-    use(registerPage);
+    use(credentialsForm);
   },
 });
 
 test("When I correctly fill the register form and press submit button then I will be redirected to edit profile page", async ({
-  registerPage,
+  credentialsForm,
   browserName,
   page,
 }) => {
   const credentials = getRandomCredentialsByBrowserName(browserName);
-  await registerPage.submitCredentials(credentials);
+  await credentialsForm.submitCredentials(credentials);
   await page.waitForURL(`**${EDIT_PROFILE_PAGE_ROUTE}`);
 
   const changeInfoSection = await page.getByTestId("change-info-section");
@@ -40,7 +42,7 @@ test("When I fill the register form and press submit button but the email is dup
   page,
   request,
   browserName,
-  registerPage,
+  credentialsForm,
 }) => {
   const credentials = getRandomCredentialsByBrowserName(browserName);
 
@@ -48,7 +50,7 @@ test("When I fill the register form and press submit button but the email is dup
     data: credentials,
   });
 
-  await registerPage.submitCredentials(credentials);
+  await credentialsForm.submitCredentials(credentials);
   await page.waitForSelector('[data-testid="sign-up-error-messages"]');
 
   const errorMessages = await page.getByTestId("sign-up-error-messages");

@@ -52,6 +52,7 @@ export default function CredentialsForm({
   return (
     <form onSubmit={onSubmitHandler} data-testid={`${formId}-credentials-form`}>
       <IconTextField
+        disabled={loading}
         placeholder="Email"
         alt="envelope icon"
         data-testid={`${formId}-textfield-user-email`}
@@ -61,6 +62,7 @@ export default function CredentialsForm({
         type="text"
       />
       <IconTextField
+        disabled={loading}
         placeholder="Password"
         alt="lock icon"
         data-testid={`${formId}-textfield-user-password`}

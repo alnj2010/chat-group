@@ -43,7 +43,9 @@ describe("CredentialsForm", () => {
 
   it("When credentials form textfields are filled the credentials submit button should be active", async () => {
     const textFieldUserEmail = screen.getByTestId("-textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("-textfield-user-password");
+    const textFieldUserPassword = screen.getByTestId(
+      "-textfield-user-password"
+    );
     await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, credentialsDummy.password);
 
@@ -54,7 +56,9 @@ describe("CredentialsForm", () => {
 
   it("When credentials form is submited but there is a invalid email should show a messages error", async () => {
     const textFieldUserEmail = screen.getByTestId("-textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("-textfield-user-password");
+    const textFieldUserPassword = screen.getByTestId(
+      "-textfield-user-password"
+    );
 
     await userEvent.type(textFieldUserEmail, "invalidemail");
     await userEvent.type(textFieldUserPassword, credentialsDummy.password);
@@ -70,7 +74,9 @@ describe("CredentialsForm", () => {
 
   it("When credentials form is submited but there is a with less than (4) characters should show a messages error", async () => {
     const textFieldUserEmail = screen.getByTestId("-textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("-textfield-user-password");
+    const textFieldUserPassword = screen.getByTestId(
+      "-textfield-user-password"
+    );
 
     await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, "123");
@@ -92,7 +98,9 @@ describe("CredentialsForm", () => {
     );
 
     const textFieldUserEmail = screen.getByTestId("-textfield-user-email");
-    const textFieldUserPassword = screen.getByTestId("-textfield-user-password");
+    const textFieldUserPassword = screen.getByTestId(
+      "-textfield-user-password"
+    );
 
     await userEvent.type(textFieldUserEmail, credentialsDummy.email);
     await userEvent.type(textFieldUserPassword, credentialsDummy.password);
