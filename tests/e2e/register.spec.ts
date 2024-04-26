@@ -5,7 +5,7 @@ import {
 } from "@/constanst";
 import { test as base, expect } from "@playwright/test";
 import { getRandomCredentialsByBrowserName } from "../dummies";
-import { CredentialsForm } from "./fixtures/credentials-form";
+import { CredentialsForm } from "./page-object-models/credentials-form";
 
 const test = base.extend<{ credentialsForm: CredentialsForm }>({
   credentialsForm: async ({ page }, use) => {
