@@ -1,4 +1,4 @@
-import { test as baseTest, request, expect } from "@playwright/test";
+import { test as baseTest, expect } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 import { getRandomDummyCredentialsById } from "../dummies";
@@ -61,7 +61,7 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
   ],
 });
 
-test("When I am authenticated and go to profile page then it should show the basic user info ", async ({
+test("When I press the logout button then my session is finished", async ({
   page,
 }) => {
   await page.goto(PROFILE_PAGE_ROUTE);
