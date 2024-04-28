@@ -5,12 +5,14 @@ export const credentialsDummy: Credentials = {
   password: "1234",
 };
 
-export function getRandomCredentialsByBrowserName(
-  browserName: string
+
+
+export function getRandomDummyCredentialsById(
+  id: number | string
 ): Credentials {
-  const id = Math.random().toString().substring(2, 5);
+  const random = Math.random().toString().substring(2, 5);
   const credentials: Credentials = {
-    email: `${browserName}${id}${Date.now()}${credentialsDummy.email}`,
+    email: `${id}${random}${Date.now()}${credentialsDummy.email}`,
     password: credentialsDummy.password,
   };
   return credentials;

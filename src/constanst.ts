@@ -7,6 +7,7 @@ export const ERROR_PAGE_ROUTE = "/error";
 
 //API ROUTES
 export const REGISTER_API_ROUTE = "/api/auth/register";
+export const SIGNIN_API_ROUTE = "/api/auth/callback/credentials";
 
 //FORM ERROR MESSAGES
 export const EMAIL_FIELD_IS_REQUIRED = "Email is required";

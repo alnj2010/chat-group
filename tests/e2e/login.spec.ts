@@ -4,17 +4,14 @@ import {
   REGISTER_API_ROUTE,
 } from "@/constanst";
 import { test as base, expect } from "@playwright/test";
-import {
-  credentialsDummy,
-  getRandomCredentialsByBrowserName,
-} from "../dummies";
+import { credentialsDummy, getRandomDummyCredentialsById } from "../dummies";
 import { CredentialsForm } from "./page-object-models/credentials-form";
 
 const test = base.extend<{ credentialsForm: CredentialsForm }>({
   credentialsForm: async ({ page }, use) => {
     const credentialsForm = new CredentialsForm(page, "sign-in");
 
-    credentialsForm.goto();
+    await credentialsForm.goto();
 
     use(credentialsForm);
   },
@@ -38,7 +35,7 @@ test("When I fill the login form and press submit button but the email is not ri
   request,
   credentialsForm,
 }) => {
-  const credentials = getRandomCredentialsByBrowserName(browserName);
+  const credentials = getRandomDummyCredentialsById(browserName);
 
   await request.post(REGISTER_API_ROUTE, {
     data: credentials,
@@ -62,7 +59,7 @@ test("When I fill the login form and press submit button then I will be redirect
   request,
   credentialsForm,
 }) => {
-  const credentials = getRandomCredentialsByBrowserName(browserName);
+  const credentials = getRandomDummyCredentialsById(browserName);
 
   await request.post(REGISTER_API_ROUTE, {
     data: credentials,
