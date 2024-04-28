@@ -2,10 +2,7 @@ import { test as baseTest, request, expect } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 import { getRandomDummyCredentialsById } from "../dummies";
-import {
-  PROFILE_PAGE_ROUTE,
-  REGISTER_API_ROUTE,
-} from "@/constanst";
+import { PROFILE_PAGE_ROUTE, REGISTER_API_ROUTE } from "@/constanst";
 import { CredentialsForm } from "./page-object-models/credentials-form";
 
 export const test = baseTest.extend<{}, { workerStorageState: string }>({
@@ -28,7 +25,7 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
 
       // Important: make sure we authenticate in a clean environment by unsetting storage state.
       const page = await browser.newPage({
-        baseURL: "http://127.0.0.1:3000", // TODO change to environment variable
+        baseURL: process.env.BASE_URL,
         storageState: undefined,
       });
 
@@ -67,9 +64,7 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
 test("When I am authenticated and go to profile page then it should show the basic user info ", async ({
   page,
 }) => {
-  
   await page.goto(PROFILE_PAGE_ROUTE);
-  await page.waitForTimeout(3000);
 
   const profileInfoSection = await page.getByTestId("profile-info-section");
 

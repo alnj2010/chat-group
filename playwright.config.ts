@@ -1,9 +1,13 @@
+import dotenv from "dotenv";
 import { defineConfig, devices } from "@playwright/test";
 import path from "path";
 
-const PORT = process.env.PORT || 3000;
+dotenv.config({
+  path: [path.resolve(__dirname, ".env"), path.resolve(__dirname, ".env.test")],
+  override: true,
+});
 
-const baseURL = `http://127.0.0.1:${PORT}`;
+const baseURL = process.env.BASE_URL;
 
 /**
  * Read environment variables from file.
