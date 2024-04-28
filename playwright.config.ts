@@ -3,7 +3,12 @@ import { defineConfig, devices } from "@playwright/test";
 import path from "path";
 
 dotenv.config({
-  path: [path.resolve(__dirname, ".env"), path.resolve(__dirname, ".env.test")],
+  path: [
+    path.resolve(__dirname, ".env"),
+    process.env.CI
+      ? path.resolve(__dirname, ".env.ci")
+      : path.resolve(__dirname, ".env.test.local"),
+  ],
   override: true,
 });
 
