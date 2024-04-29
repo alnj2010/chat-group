@@ -33,7 +33,7 @@ export async function callAPICredentialsSignIn(credentials: Credentials) {
 
     if (!resSignIn || !resSignIn.ok) {
       if (!resSignIn || resSignIn.error == "undefined") {
-        throw new Error("it was not posible sign in");
+        throw new Error("it was not posible sign in"); // TODO Create a constant to this message
       } else {
         throw new FormValidationError([INVALID_CREDENTIALS]);
       }

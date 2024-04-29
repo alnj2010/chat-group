@@ -4,14 +4,14 @@ import {
   REGISTER_API_ROUTE,
 } from "@/constanst";
 import { test as base, expect } from "@playwright/test";
-import { getRandomCredentialsByBrowserName } from "../dummies";
-import { CredentialsForm } from "./fixtures/credentials-form";
+import { getRandomDummyCredentialsById } from "../dummies";
+import { CredentialsForm } from "./page-object-models/credentials-form";
 
 const test = base.extend<{ credentialsForm: CredentialsForm }>({
   credentialsForm: async ({ page }, use) => {
     const credentialsForm = new CredentialsForm(page, "sign-up");
 
-    credentialsForm.goto();
+    await credentialsForm.goto();
     const registerLink = page.getByTestId("jump-to");
     await registerLink.click();
 
@@ -24,7 +24,7 @@ test("When I correctly fill the register form and press submit button then I wil
   browserName,
   page,
 }) => {
-  const credentials = getRandomCredentialsByBrowserName(browserName);
+  const credentials = getRandomDummyCredentialsById(browserName);
   await credentialsForm.submitCredentials(credentials);
   await page.waitForURL(`**${EDIT_PROFILE_PAGE_ROUTE}`);
 
@@ -44,7 +44,7 @@ test("When I fill the register form and press submit button but the email is dup
   browserName,
   credentialsForm,
 }) => {
-  const credentials = getRandomCredentialsByBrowserName(browserName);
+  const credentials = getRandomDummyCredentialsById(browserName);
 
   await request.post(REGISTER_API_ROUTE, {
     data: credentials,

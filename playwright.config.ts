@@ -1,19 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
+import { loadEnvConfig } from "@next/env";
 import path from "path";
 
-const PORT = process.env.PORT || 3000;
+loadEnvConfig(process.cwd());
 
-const baseURL = `http://127.0.0.1:${PORT}`;
+const baseURL = process.env.BASE_URL;
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: path.join(__dirname, "/tests/e2e"),
   /* Run tests in files in parallel */
@@ -54,7 +46,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev:e2e",
+    command: "npm run dev",
     env: {
       NODE_ENV: "test",
     },
