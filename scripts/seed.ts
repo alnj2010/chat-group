@@ -1,5 +1,8 @@
 import { Client } from "pg";
 import * as core from "@actions/core";
+import { loadEnvConfig } from "@next/env";
+
+loadEnvConfig(process.cwd());
 
 function log(msg: string) {
   core.debug(msg);
