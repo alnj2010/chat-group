@@ -21,9 +21,8 @@ export async function createUserByCredentials(credentials: Credentials) {
       `INSERT INTO users (uuid, email, password) VALUES ('${uuid}', '${credentials.email}', '${hashedPassword}');`
     );
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     throw new DBError(API_ERROR_DB);
-    //throw new ApiError(500, API_ERROR_DB);
   }
 }
 
@@ -34,9 +33,8 @@ export async function userEmailExist(email: string): Promise<boolean> {
     );
     return result.rowCount !== 0;
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     throw new DBError(API_ERROR_DB);
-    //throw new ApiError(500, API_ERROR_DB);
   }
 }
 
@@ -60,7 +58,7 @@ export async function getUserByEmail(email: string): Promise<User> {
       image: userRow.photo,
     };
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     throw error;
   }
 }

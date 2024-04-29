@@ -1,28 +1,11 @@
-import dotenv from "dotenv";
 import { defineConfig, devices } from "@playwright/test";
+import { loadEnvConfig } from "@next/env";
 import path from "path";
 
-dotenv.config({
-  path: [
-    path.resolve(__dirname, ".env"),
-    process.env.CI
-      ? path.resolve(__dirname, ".env.ci")
-      : path.resolve(__dirname, ".env.test.local"),
-  ],
-  override: true,
-});
+loadEnvConfig(process.cwd());
 
 const baseURL = process.env.BASE_URL;
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: path.join(__dirname, "/tests/e2e"),
   /* Run tests in files in parallel */

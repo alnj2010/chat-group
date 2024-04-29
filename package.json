@@ -10,7 +10,7 @@
     "test": "jest",
     "test:ci": "jest --ci",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test",
+    "test:e2e": "NODE_ENV=test playwright test",
     "test:e2e:ui": "playwright test --ui",
     "lint": "next lint",
     "seed:e2e": "ts-node -P tsconfig.scripts.json ./scripts/seed.ts",
